@@ -80,6 +80,9 @@ namespace DoubleSnake {
                 case SDLK_F11:
                     action = Action::FULLSCREEN;
                     break;
+                case SDLK_ESCAPE:
+                    action = Action::ESCAPE;
+                    break;
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
                         case SDLK_LEFT:
@@ -107,8 +110,6 @@ namespace DoubleSnake {
 
     void Screen::update(int event, bool isGameOver)
     {
-        //if(event == Action::FULLSCREEN) SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
-        //if(event != Action::FULLSCREEN) SDL_SetWindowFullscreen(window,0);
         SDL_UpdateTexture(m_texture, NULL, m_mainBuffer, S_WIDTH * sizeof(Uint32));
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
@@ -118,13 +119,19 @@ namespace DoubleSnake {
     void Screen::setPixel(int x, int y, Uint32 color)
     {
         if(x >= 0 && x < S_WIDTH && y >= 0 && y < S_HEIGHT) {
-            m_mainBuffer[y * S_WIDTH + x] = color;
+            m_mainBuffer[y * S_WIDTH + x] = color; //a revoir
         }
     }
 
     void Screen::clear()
     {
         memset(m_mainBuffer, 0, S_WIDTH * S_HEIGHT * sizeof(Uint32));
+    }
+
+    void Screen::fullscreen(bool fullscreen)
+    {
+        if(fullscreen) SDL_SetWindowFullscreen(m_window,SDL_WINDOW_FULLSCREEN);
+        if(!fullscreen) SDL_SetWindowFullscreen(m_window,0);
     }
 
     void Screen::close()

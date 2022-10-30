@@ -12,7 +12,7 @@ namespace DoubleSnake {
     class Screen {
     public:
         enum Action {
-            QUIT, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
+            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
         };//Action of the player
         static board S_WIDTH;
         static board S_HEIGHT;
@@ -35,6 +35,8 @@ namespace DoubleSnake {
         void setPixel(int x, int y, Uint32 color);
 
         void clear();
+
+        void fullscreen(bool fullscreen);
 
         void close();
 
