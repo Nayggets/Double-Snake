@@ -1,5 +1,5 @@
 CXX = g++
-LANG_STD = -std=c++20
+LANG_STD = -std=c++2a
 COMPILE_FLAGS = -g -O2 -Os
 LDFLAGS = -lSDL2 -lSDL2_image
 APP_NAME = Double_Snake
