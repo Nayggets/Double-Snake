@@ -77,14 +77,14 @@ namespace DoubleSnake {
                 case SDL_QUIT:
                     action = Action::QUIT;
                     break;
-                case SDLK_F11:
-                    action = Action::FULLSCREEN;
-                    break;
-                case SDLK_ESCAPE:
-                    action = Action::ESCAPE;
-                    break;
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
+                        case SDLK_F11:
+                            action = Action::FULLSCREEN;
+                            break;
+                        case SDLK_ESCAPE:
+                            action = Action::ESCAPE;
+                            break;
                         case SDLK_LEFT:
                             action = Action::MOVE_LEFT;
                             break;
@@ -97,7 +97,7 @@ namespace DoubleSnake {
                         case SDLK_UP:
                             action = Action::MOVE_UP;
                             break;
-                        case SDLK_RETURN:
+                        case SDLK_SPACE:
                             action = Action::PAUSE;
                             break;
                     }
@@ -108,7 +108,7 @@ namespace DoubleSnake {
     }
 
 
-    void Screen::update(int event, bool isGameOver)
+    void Screen::update()
     {
         SDL_UpdateTexture(m_texture, NULL, m_mainBuffer, S_WIDTH * sizeof(Uint32));
         SDL_RenderClear(m_renderer);
@@ -145,7 +145,7 @@ namespace DoubleSnake {
     }
 
     void Screen::drawGameOver() {
-        //TODO
+        //TODO gameOver
     }
 }
 

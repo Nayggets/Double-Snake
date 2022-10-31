@@ -1,53 +1,65 @@
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <time.h>
-#include <stdlib.h>
 #include "Screen.hpp"
 #include <SDL2/SDL.h>
+#include <iostream>
+#include <unistd.h>
 
 using namespace DoubleSnake;
 
 bool startWait(Screen &screen)
 {
-    bool starting = true;
     bool quit = false;
-    while(starting){
-        if(screen.processEvents() == Screen::Action::QUIT) {
-            quit = true;
-            starting = false;
-        }
-        if(screen.processEvents() == Screen::Action::MOVE_DOWN){
-            starting = false;
-        }
-        else if(screen.processEvents() == Screen::Action::MOVE_UP){
-            starting = false;
-        }
-        else if(screen.processEvents() == Screen::Action::MOVE_LEFT){
-            starting = false;
-        }
-        else if(screen.processEvents() == Screen::Action::MOVE_RIGHT){
-            starting = false;
+    bool starting = true;
+
+    std::cout << "Appuyez sur une touche pour commencer" << std::endl;
+    while(starting && !quit){
+        int action = screen.processEvents();
+        switch (action) {
+            case Screen::Action::QUIT:
+                quit = true;
+                break;
+            case Screen::Action::ESCAPE:
+                quit = true;
+                break;
+            case Screen::Action::MOVE_LEFT:
+                starting = false;
+                break;
+            case Screen::Action::MOVE_RIGHT:
+                starting = false;
+                break;
+            case Screen::Action::MOVE_UP:
+                starting = false;
+                break;
+            case Screen::Action::MOVE_DOWN:
+                starting = false;
+                break;
         }
     }
     return quit;
 }
+
 
 bool pauseWait(Screen &screen, bool &pause)
 {
     bool quit = false;
-    while(pause){
-        if(screen.processEvents() == Screen::Action::QUIT) {
-            quit = true;
-            pause = false;
+    while(pause && !quit){
+        int action = screen.processEvents();
+        switch (action) {
+            case Screen::Action::QUIT:
+                quit = true;
+                break;
+            case Screen::Action::ESCAPE:
+                quit = true;
+                break;
+            case Screen::Action::PAUSE:
+                pause = false;
+                break;
         }
-        if(screen.processEvents() == Screen::Action::PAUSE) {pause = false;}
     }
     return quit;
 }
 
 
-int main(int argc, char ** argv)
+int main()
 {
     Screen screen;
     if (!screen.init()) {
@@ -58,11 +70,17 @@ int main(int argc, char ** argv)
     bool pause = false;
     bool quit = false;
     bool fullscreen = false;
+    bool starting = true;
 
     while(!quit){
-        //initalisation snake, screen.clear(), food, screen.update
+        //TODO initalisation snake, screen.clear(), food, screen.update
 
-        quit = startWait(screen); //wait player & verif if quit
+        if (starting) {
+            quit = startWait(screen);
+            starting = false;
+        }
+//        std::cout << "ici" << std::endl;
+//        sleep(3);
 
         switch (screen.processEvents()) {
             case Screen::Action::QUIT:
@@ -79,27 +97,31 @@ int main(int argc, char ** argv)
                 else {fullscreen = true;}
                 break;
             case Screen::Action::MOVE_UP:
-                //TO DO
+                //TODO move up
                 break;
             case Screen::Action::MOVE_DOWN:
-                //TO DO
+                //TODO move down
                 break;
             case Screen::Action::MOVE_LEFT:
-                //TO DO
+                //TODO move left
                 break;
             case Screen::Action::MOVE_RIGHT:
-                //TO DO
+                //TODO move_right
                 break;
         }
-        if(pause){//cas pause
+        if(pause){
+            std::cout << "pause" << std::endl;
             quit = pauseWait(screen, pause);
+            std::cout << "fin pause" << std::endl;
         }
 
-        //screen.fullscreen(&fullscreen); //y'a un problème avec ça pour l'instant
+        screen.fullscreen(fullscreen);
 
-        //déplacement du snake
+        //TODO déplacement du snake
 
     }
+
+    screen.close();
     return 0;
 }
 //g++ *.cpp `sdl2-config --cflags --libs` -lSDL2_ttf

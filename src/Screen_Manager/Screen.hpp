@@ -30,7 +30,7 @@ namespace DoubleSnake {
 
         int processEvents();
 
-        void update(int event, bool isGameOver);
+        void update();
 
         void setPixel(int x, int y, Uint32 color);
 
