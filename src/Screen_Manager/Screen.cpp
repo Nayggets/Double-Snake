@@ -100,6 +100,18 @@ namespace DoubleSnake {
                         case SDLK_SPACE:
                             action = Action::PAUSE;
                             break;
+                        case SDLK_q:
+                            action = Action::MOVE_L;
+                            break;
+                        case SDLK_d:
+                            action = Action::MOVE_R;
+                            break;
+                        case SDLK_s:
+                            action = Action::MOVE_D;
+                            break;
+                        case SDLK_z:
+                            action = Action::MOVE_U;
+                            break;
                     }
                     break;
             }
@@ -119,12 +131,31 @@ namespace DoubleSnake {
     {
         SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
         SDL_Rect rect;
-        rect.x=x;
-        rect.y=y;
-        rect.w=16;
-        rect.h=16;
-        SDL_RenderFillRect(m_renderer,&rect);
+        rect.x = x;
+        rect.y = y;
 
+//        else if(x >= S_WIDTH){
+//            rect.x = 0;
+//            rect.y = y;
+//        }
+//        else if(x < 0){
+//            rect.x = S_WIDTH;
+//            rect.y = y;
+//        }
+//        else if(y >= S_HEIGHT){
+//            rect.x = x;
+//            rect.y = 0;
+//        }
+//        else if(y < 0){
+//            rect.x = x;
+//            rect.y = S_HEIGHT;
+//        }
+        //marche que quand va vers le bas + modif pas x et y de main donc prob
+
+        rect.w = 16;
+        rect.h = 16;
+
+        SDL_RenderFillRect(m_renderer, &rect);
         SDL_RenderPresent(m_renderer);
     }
 

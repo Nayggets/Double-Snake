@@ -12,7 +12,7 @@ namespace DoubleSnake {
     class Screen {
     public:
         enum Action {
-            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
+            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_U, MOVE_D, MOVE_L, MOVE_R
         };//Action of the player
         static board S_WIDTH;
         static board S_HEIGHT;
