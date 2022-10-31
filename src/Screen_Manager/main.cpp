@@ -72,15 +72,23 @@ int main()
     bool fullscreen = false;
     bool starting = true;
 
+    int ax=0;
+    int ay=0;
+    int x=0;
+    int y=0;
+    screen.setPixel(x,y,255,0,0);
+
     while(!quit){
-        //TODO initalisation snake, screen.clear(), food, screen.update
+        //TODO initalisation snake1, snake2,  food, corriger update()
+
+        screen.clear();
+        screen.setPixel(x,y,255,0,0);
+        screen.update();
 
         if (starting) {
             quit = startWait(screen);
             starting = false;
         }
-//        std::cout << "ici" << std::endl;
-//        sleep(3);
 
         switch (screen.processEvents()) {
             case Screen::Action::QUIT:
@@ -97,16 +105,24 @@ int main()
                 else {fullscreen = true;}
                 break;
             case Screen::Action::MOVE_UP:
-                //TODO move up
+                std::cout << "up" << std::endl;
+                ay=y;
+                y-=16;
                 break;
             case Screen::Action::MOVE_DOWN:
-                //TODO move down
+                std::cout << "down" << std::endl;
+                ay=y;
+                y+=16;
                 break;
             case Screen::Action::MOVE_LEFT:
-                //TODO move left
+                std::cout << "left" << std::endl;
+                ax=x;
+                x-=16;
                 break;
             case Screen::Action::MOVE_RIGHT:
-                //TODO move_right
+                std::cout << "right" << std::endl;
+                ax=x;
+                x+=16;
                 break;
         }
         if(pause){
@@ -117,10 +133,10 @@ int main()
 
         screen.fullscreen(fullscreen);
 
+
         //TODO déplacement du snake
 
     }
-
     screen.close();
     return 0;
 }

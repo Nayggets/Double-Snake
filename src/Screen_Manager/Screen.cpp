@@ -113,14 +113,19 @@ namespace DoubleSnake {
         SDL_UpdateTexture(m_texture, NULL, m_mainBuffer, S_WIDTH * sizeof(Uint32));
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-        SDL_RenderPresent(m_renderer);
     }
 
-    void Screen::setPixel(int x, int y, Uint32 color)
+    void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
     {
-        if(x >= 0 && x < S_WIDTH && y >= 0 && y < S_HEIGHT) {
-            m_mainBuffer[y * S_WIDTH + x] = color; //a revoir
-        }
+        SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
+        SDL_Rect rect;
+        rect.x=x;
+        rect.y=y;
+        rect.w=16;
+        rect.h=16;
+        SDL_RenderFillRect(m_renderer,&rect);
+
+        SDL_RenderPresent(m_renderer);
     }
 
     void Screen::clear()
