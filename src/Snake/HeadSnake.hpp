@@ -3,9 +3,9 @@
 
 class HeadSnake : public SnakePart{
     public:
-        HeadSnake(SnakePart parent,int dir);
+        HeadSnake(int x, int y, int dir);
         ~HeadSnake();
         void draw() override;
         void update(int move) override;
-
+        bool check_collide(SnakePart other) override;
 };
