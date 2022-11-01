@@ -40,6 +40,8 @@ namespace DoubleSnake {
 
         void close();
 
+        void drawStart();
+
         void drawGameOver();
     };
 }

@@ -90,6 +90,8 @@ int main()
     int x2=Screen::S_WIDTH-16;
     int y2=Screen::S_HEIGHT-16;
 
+    screen.drawStart();
+
     while(!quit){
 
         if (starting) {

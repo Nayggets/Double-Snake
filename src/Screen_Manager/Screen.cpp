@@ -122,6 +122,7 @@ namespace DoubleSnake {
 
     void Screen::update()
     {
+        SDL_RenderPresent(m_renderer);
         SDL_UpdateTexture(m_texture, NULL, m_mainBuffer, S_WIDTH * sizeof(Uint32));
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
@@ -131,32 +132,13 @@ namespace DoubleSnake {
     {
         SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
         SDL_Rect rect;
+
         rect.x = x;
         rect.y = y;
-
-//        else if(x >= S_WIDTH){
-//            rect.x = 0;
-//            rect.y = y;
-//        }
-//        else if(x < 0){
-//            rect.x = S_WIDTH;
-//            rect.y = y;
-//        }
-//        else if(y >= S_HEIGHT){
-//            rect.x = x;
-//            rect.y = 0;
-//        }
-//        else if(y < 0){
-//            rect.x = x;
-//            rect.y = S_HEIGHT;
-//        }
-        //marche que quand va vers le bas + modif pas x et y de main donc prob
-
         rect.w = 16;
         rect.h = 16;
 
         SDL_RenderFillRect(m_renderer, &rect);
-        SDL_RenderPresent(m_renderer);
     }
 
     void Screen::clear()
@@ -178,6 +160,13 @@ namespace DoubleSnake {
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
+    }
+
+    void Screen::drawStart() {
+        //TODO start
+        setPixel(100,100,0,255,0);
+        setPixel(200,200,0,255,0);
+        update();
     }
 
     void Screen::drawGameOver() {
