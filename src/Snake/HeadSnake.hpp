@@ -7,5 +7,4 @@ class HeadSnake : public SnakePart{
         ~HeadSnake();
         void draw() override;
         void update(int move) override;
-        bool check_collide(SnakePart other) override;
 };

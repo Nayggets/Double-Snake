@@ -1,8 +1,7 @@
 #include "BodySnake.hpp"
 
-BodySnake::BodySnake(int x, int y,SnakePart parent,int dir)
+BodySnake::BodySnake(int x, int y,int dir)
 {
-    parent->nextPart = this;
     this->x = x;
     this->y = y;
     this->dir = dir;
@@ -12,9 +11,7 @@ BodySnake::BodySnake(int x, int y,SnakePart parent,int dir)
 
 void BodySnake::update(int move)
 {
-    if(this->nextPart != nullptr){
-        this->nextPart->update(this->lastmoove);
-    }
+
     if(move == 4){
         this->y++;
     }
@@ -31,12 +28,8 @@ void BodySnake::update(int move)
 
 }
 
-bool BodySnake::check_collide(SnakePart other)
+void BodySnake::draw() 
 {
-    if(this->x == other.x && this->y == other.y){
-        return true;
-    }
-    else{
-        return false;
-    }
+
 }
+

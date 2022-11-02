@@ -162,15 +162,38 @@ namespace DoubleSnake {
         SDL_Quit();
     }
 
-    void Screen::drawStart() {
+    void Screen::drawStart() 
+    {
         //TODO start
         setPixel(100,100,0,255,0);
         setPixel(200,200,0,255,0);
         update();
     }
 
-    void Screen::drawGameOver() {
+    void Screen::drawGameOver() 
+    {
         //TODO gameOver
+    }
+
+    void Screen::drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y)
+    {
+        int copyX = x;
+        for(auto& r : bitMap){
+            copyX = x;
+            for(auto& s : r){
+                if(s == 1){
+                    setPixel(copyX,y,255,0,255);
+                }
+                if(s == 2){
+                    setPixel(copyX,y,0,255,0);
+                }
+                if(s == 3){
+                    setPixel(copyX,y,0,0,255);
+                }
+                copyX++;
+            }
+            y++;
+        }
     }
 }
 

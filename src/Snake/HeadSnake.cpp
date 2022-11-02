@@ -14,12 +14,10 @@ void HeadSnake::update(int moove)
     if(lastmoove == 4){
         if(moove == 3){
             this->x++;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else if(moove == 1){
             this->x--;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else{
@@ -30,12 +28,10 @@ void HeadSnake::update(int moove)
     else if(lastmoove == 3){
         if(moove == 4){
             this->y++;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else if(moove == 2){
             this->y--;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else{
@@ -46,12 +42,10 @@ void HeadSnake::update(int moove)
     else if(lastmoove == 2){
         if(moove == 3){
             this->x++;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else if(moove == 1){
             this->x--;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else{
@@ -63,12 +57,10 @@ void HeadSnake::update(int moove)
     else{
         if(moove == 4){
             this->y++;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else if(moove == 2){
             this->y--;
-            nextPart->update(lastmoove);
             lastmoove = moove;
         }
         else{
@@ -79,13 +71,9 @@ void HeadSnake::update(int moove)
 
 }
 
-
-bool HeadSnake::check_collide(SnakePart other)
+void HeadSnake::draw()
 {
-    if(this->x == other.x && this->y == other.y){
-        return true;
-    }
-    else{
-        return false;
-    }
+    
 }
+
+

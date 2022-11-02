@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_ttf.h"
 #include <string>
+#include <vector>
 
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
@@ -43,6 +44,8 @@ namespace DoubleSnake {
         void drawStart();
 
         void drawGameOver();
+
+        void drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y);
     };
 }
 
