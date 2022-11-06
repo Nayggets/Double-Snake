@@ -8,7 +8,6 @@
 
 typedef const int board;
 
-namespace DoubleSnake {
 
     board Screen::S_WIDTH = 1280;
     board Screen::S_HEIGHT = 720;
@@ -140,16 +139,27 @@ namespace DoubleSnake {
 
         SDL_RenderFillRect(m_renderer, &rect);
     }
+    
+    void Screen::drawPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
+    {
+        SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
+        SDL_Rect rect;
+
+        rect.x = x;
+        rect.y = y;
+
+        SDL_RenderDrawPoint(m_renderer,x,y);
+    }
 
     void Screen::clear()
     {
         memset(m_mainBuffer, 0, S_WIDTH * S_HEIGHT * sizeof(Uint32));
     }
 
-    void Screen::fullscreen(bool fullscreen)
+    void Screen::fullscreen(bool m_fullscreen)
     {
-        if(fullscreen) SDL_SetWindowFullscreen(m_window,SDL_WINDOW_FULLSCREEN);
-        if(!fullscreen) SDL_SetWindowFullscreen(m_window,0);
+        if(m_fullscreen) SDL_SetWindowFullscreen(m_window,SDL_WINDOW_FULLSCREEN);
+        if(!m_fullscreen) SDL_SetWindowFullscreen(m_window,0);
     }
 
     void Screen::close()
@@ -195,7 +205,7 @@ namespace DoubleSnake {
             y++;
         }
     }
-}
+
 
 
 
@@ -210,23 +220,23 @@ namespace DoubleSnake {
 //#define WIDTH 1280
 //#define HEIGHT 720
 //
-//bool running, fullscreen;
+//bool running, m_fullscreen;
 //
 //SDL_Renderer* renderer;
 //SDL_Window* window;
 //
 //void update() {
-//    if(fullscreen) SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN);
-//    if(!fullscreen) SDL_SetWindowFullscreen(window,0);
+//    if(m_fullscreen) SDL_SetWindowm_fullscreen(window,SDL_WINDOW_m_fullscreen);
+//    if(!m_fullscreen) SDL_SetWindowm_fullscreen(window,0);
 //}
 //void input() {
 //    SDL_Event e;
 //    while(SDL_PollEvent(&e)){
-//        if(e.type == SDL_QUIT) {running = false;}
+//        if(e.type == SDL_m_quit) {running = false;}
 //    }
 //    const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 //    if(keystates[SDL_SCANCODE_ESCAPE]) running=false;
-//    if(keystates[SDL_SCANCODE_F11]) fullscreen = !fullscreen;
+//    if(keystates[SDL_SCANCODE_F11]) m_fullscreen = !m_fullscreen;
 //}
 //void draw() {
 //    SDL_SetRenderDrawColor(renderer, 40, 43, 200, 255);
@@ -242,7 +252,7 @@ namespace DoubleSnake {
 //int main()
 //{
 //    running = 1;
-//    fullscreen=0;
+//    m_fullscreen=0;
 //    if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {std::cout << "Failed at SDL_Init()" << std::endl;}
 //    if(SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, 0, &window, &renderer) < 0) {std::cout << "Failed at SDL_CreateWindowAndRenderer()" << std::endl;}
 //    SDL_SetWindowTitle(window, "Double Snake");
@@ -254,5 +264,5 @@ namespace DoubleSnake {
 //    }
 //    SDL_DestroyRenderer(renderer);
 //    SDL_DestroyWindow(window);
-//    SDL_Quit();
+//    SDL_m_quit();
 //}

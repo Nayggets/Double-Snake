@@ -5,7 +5,7 @@ class BodySnake : public SnakePart{
     public:
         BodySnake(int x, int y,int dir);
         ~BodySnake();
-        void draw() override;
-        void update(int move) override;
-
+        void draw(Screen& screen) override;
+        int update(int move) override;
+        BodySnake createNext();
 };

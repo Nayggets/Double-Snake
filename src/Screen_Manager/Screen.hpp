@@ -8,7 +8,6 @@
 
 typedef const int board;
 
-namespace DoubleSnake {
 
     class Screen {
     public:
@@ -35,6 +34,8 @@ namespace DoubleSnake {
 
         void setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue);
 
+        void drawPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue);
+        
         void clear();
 
         void fullscreen(bool fullscreen);
@@ -47,6 +48,6 @@ namespace DoubleSnake {
 
         void drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y);
     };
-}
+
 
 #endif //SCREEN_HPP
