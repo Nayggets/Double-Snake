@@ -34,5 +34,5 @@ class SnakeGame{
         void globalDraw();
         void globalUpdate();
         void globalCheckCollide();
-
+        void gameOver();
 };

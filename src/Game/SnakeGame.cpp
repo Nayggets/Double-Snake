@@ -160,6 +160,10 @@ void SnakeGame::globalCheckCollide()
     for(auto& s : m_toCheckCollide){
         if(m_snakeTwo.checkCollideWithOther(s)){
             m_quit = true;
+            m_snakeTwoDead = true;
+        }
+        if(m_snakeOne.checkCollideWithOther(s){
+            m_quit = true;
             m_snakeOneDead = true;
         }
     }
@@ -167,6 +171,10 @@ void SnakeGame::globalCheckCollide()
     m_toCheckCollide = m_snakeTwo.allBody();
     for(auto& s : m_toCheckCollide){
         if(m_snakeOne.checkCollideWithOther(s)){
+            m_quit = true;
+            m_snakeOneDead = true;
+        }
+        if(m_snakeTwo.checkCollideWithOther(s)){
             m_quit = true;
             m_snakeTwoDead = true;
         }
@@ -210,16 +218,22 @@ void SnakeGame::run()
             m_tickAtEnd = SDL_GetTicks();
 
     }
+
     m_screen.close();
+
+}
+
+void SnakeGame::gameOver()
+{
+    m_screen.clear();
+        
 }
 
 void SnakeGame::launch()
 {
     std::vector<Body> temp;
     m_screen.drawStart();
-    unsigned int a = SDL_GetTicks();
-    unsigned int b = SDL_GetTicks();
-    double delta = 0;
+
 
     m_screen.clear();
     m_snakeOne.draw(m_screen);
