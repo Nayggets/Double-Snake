@@ -1,7 +1,7 @@
 CXX = g++
 LANG_STD = -std=c++2a
 COMPILE_FLAGS = -g -O2 -Os
-LDFLAGS = -lSDL2 -lSDL2_image
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 APP_NAME = Double_Snake
 SRC_FILES = src/Screen_Manager/*.cpp \
 			src/Snake/*.cpp  \

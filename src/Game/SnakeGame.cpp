@@ -8,6 +8,7 @@ SnakeGame::SnakeGame()
       m_screen{}
 {
     m_screen.init();
+    m_run = true;
 }
 
 SnakeGame::~SnakeGame()
@@ -81,6 +82,9 @@ void SnakeGame::pauseWait()
 void SnakeGame::checkProcessEvent()
 {
     switch (m_screen.processEvents()) {
+        case Screen::Action::ENTER:
+            m_endMenu = false;
+            break;
         case Screen::Action::QUIT:
             m_quit = true;
             break;
@@ -148,6 +152,7 @@ void SnakeGame::globalUpdate()
 
 void SnakeGame::globalCheckCollide()
 {
+    /*check collide between snake and fruitz*/
     if(m_snakeOne.checkCollideWithOther(m_theMagicalFruit)){
         m_snakeOne.addBody();
         m_theMagicalFruit.eaten();
@@ -156,37 +161,51 @@ void SnakeGame::globalCheckCollide()
         m_snakeTwo.addBody();
         m_theMagicalFruit.eaten();
     }
+    
+    /*check collide between the two snake*/
     m_toCheckCollide = m_snakeOne.allBody();
     for(auto& s : m_toCheckCollide){
         if(m_snakeTwo.checkCollideWithOther(s)){
-            m_quit = true;
+            m_run = false;
             m_snakeTwoDead = true;
-        }
-        if(m_snakeOne.checkCollideWithOther(s){
-            m_quit = true;
-            m_snakeOneDead = true;
         }
     }
     m_toCheckCollide.clear();
     m_toCheckCollide = m_snakeTwo.allBody();
     for(auto& s : m_toCheckCollide){
         if(m_snakeOne.checkCollideWithOther(s)){
-            m_quit = true;
+            m_run = false;
             m_snakeOneDead = true;
         }
+    }
+    
+    /*check collide between a snake and his body*/
+    m_toCheckCollide.clear();
+    m_toCheckCollide = m_snakeTwo.allBodyWithoutHead();
+
+    for(auto& s : m_toCheckCollide){
         if(m_snakeTwo.checkCollideWithOther(s)){
-            m_quit = true;
+            m_run = false;
             m_snakeTwoDead = true;
+        }
+    }
+    m_toCheckCollide.clear();
+    m_toCheckCollide = m_snakeOne.allBodyWithoutHead();
+
+    for(auto& s : m_toCheckCollide){
+        if(m_snakeOne.checkCollideWithOther(s)){
+            m_run = false;
+            m_snakeOneDead = true;
         }
     }
 }
 
 void SnakeGame::run()
 {
-    while(!m_quit){
+    while(m_run && !m_quit){
 
+        m_delta += m_tickAtEnd - m_tickAtStart;
         m_tickAtStart = SDL_GetTicks();
-        m_delta += m_tickAtStart - m_tickAtEnd;
 
 
         if (m_starting) {
@@ -194,10 +213,9 @@ void SnakeGame::run()
             m_starting = false;
         }
         checkProcessEvent();
-            //TODO initalisation snake1, snake2,  food
 
             
-        if (m_delta > 1000/500.0)
+        if (m_delta > 1000/10.0)
         {
             m_delta = 0;
             globalUpdate();
@@ -219,14 +237,27 @@ void SnakeGame::run()
 
     }
 
-    m_screen.close();
-
+    gameOver();
 }
 
 void SnakeGame::gameOver()
 {
-    m_screen.clear();
-        
+    SDL_Color White = {255,255,255};
+
+    
+
+    checkProcessEvent();
+    m_endMenu = true;
+    while(m_endMenu && !m_quit)
+    {
+        m_screen.clear();
+        m_screen.drawText(512,512,12,"Game Over",White);
+        m_screen.update();
+        checkProcessEvent();
+
+    }
+    m_screen.close();
+
 }
 
 void SnakeGame::launch()

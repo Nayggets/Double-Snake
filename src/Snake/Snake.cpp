@@ -92,3 +92,20 @@ std::vector<Body> Snake::allBody()
 
     return forCollision;
 }
+
+std::vector<Body> Snake::allBodyWithoutHead()
+{
+    std::vector<Body> forCollision;
+    if(Corp.current == nullptr){
+        return forCollision;
+    }
+
+    LinkedSnake* r = &Corp;
+
+    while(r != nullptr){
+        forCollision.push_back(*r->current);
+        r = r->next;
+    }
+
+    return forCollision;
+}

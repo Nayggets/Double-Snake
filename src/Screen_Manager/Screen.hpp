@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "SDL2/SDL_ttf.h"
+#include <SDL2/SDL_ttf.h>
 #include <string>
 #include <vector>
 
@@ -12,7 +12,7 @@ typedef const int board;
     class Screen {
     public:
         enum Action {
-            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_U, MOVE_D, MOVE_L, MOVE_R
+            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_U, MOVE_D, MOVE_L, MOVE_R, ENTER
         };//Action of the player
         static board S_WIDTH;
         static board S_HEIGHT;
@@ -24,6 +24,7 @@ typedef const int board;
     public:
         //Create a Scene
         Screen();
+
 
         //Init window, renderer, texture, and buffer
         bool init();
@@ -47,6 +48,8 @@ typedef const int board;
         void drawGameOver();
 
         void drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y);
+
+        void drawText(int x,int y,int size,std::string str,SDL_Color color);
     };
 
 

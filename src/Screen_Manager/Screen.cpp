@@ -14,6 +14,7 @@ typedef const int board;
 
     Screen::Screen(): m_window(NULL),m_renderer(NULL),m_texture(NULL),m_mainBuffer(NULL){}
 
+
     bool Screen::init()
     {
         //Initialize screen
@@ -21,7 +22,10 @@ typedef const int board;
             std::cout << "Failed at SDL_Init()" << std::endl;
             return false;
         }
-
+        if(TTF_Init() < 0){
+            std::cerr << "Failed init TTF" << std::endl;
+            return false; 
+        }
         //Create window
         m_window = SDL_CreateWindow("DoubleSnake",
                                     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, S_WIDTH, S_HEIGHT,
@@ -78,6 +82,9 @@ typedef const int board;
                     break;
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
+                        case SDLK_KP_ENTER:
+                            action = Action::ENTER;
+                            break;
                         case SDLK_F11:
                             action = Action::FULLSCREEN;
                             break;
@@ -143,10 +150,7 @@ typedef const int board;
     void Screen::drawPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
     {
         SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
-        SDL_Rect rect;
-
-        rect.x = x;
-        rect.y = y;
+        
 
         SDL_RenderDrawPoint(m_renderer,x,y);
     }
@@ -170,6 +174,7 @@ typedef const int board;
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
+        TTF_Quit();
     }
 
     void Screen::drawStart() 
@@ -204,6 +209,39 @@ typedef const int board;
             }
             y++;
         }
+    }
+
+    void Screen::drawText(int x,int y,int size,std::string str,SDL_Color color)
+    {
+        TTF_Font* sans = TTF_OpenFont("Sans.ttf",size);
+        SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sans,str.c_str(),color);
+
+
+        SDL_Texture* Message = SDL_CreateTextureFromSurface(m_renderer, surfaceMessage);
+
+        SDL_Rect Message_rect; //create a rect
+        Message_rect.x = x;  //controls the rect's x coordinate 
+        Message_rect.y = y; // controls the rect's y coordinte
+        Message_rect.w = 500; // controls the width of the rect
+        Message_rect.h = 500; // controls the height of the rect
+
+        // (0,0) is on the top left of the window/screen,
+        // think a rect as the text's box,
+        // that way it would be very simple to understand
+
+        // Now since it's a texture, you have to put RenderCopy
+        // in your game loop area, the area where the whole code executes
+
+        // you put the renderer's name first, the Message,
+        // the crop size (you can ignore this if you don't want
+        // to dabble with cropping), and the rect which is the size
+        // and coordinate of your texture
+        SDL_RenderCopy(m_renderer, Message, NULL, NULL);
+        SDL_RenderPresent(m_renderer);
+        // Don't forget to free your surface and texture
+        TTF_CloseFont(sans);
+        SDL_FreeSurface(surfaceMessage);
+        SDL_DestroyTexture(Message);
     }
 
 

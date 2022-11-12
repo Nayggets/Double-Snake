@@ -30,6 +30,8 @@ class Snake{
         void addBody();
         bool checkCollideWithOther(Body b);
         std::vector<Body> allBody();
+        std::vector<Body> allBodyWithoutHead();
+
     private:
         std::unique_ptr<HeadSnake> head;
         LinkedSnake_t Corp;
