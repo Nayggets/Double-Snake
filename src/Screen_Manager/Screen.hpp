@@ -1,34 +1,28 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <string>
-#include <vector>
+#pragma once
+#include "ScreenMemoryManagement.hpp"
 
-#ifndef SCREEN_HPP
-#define SCREEN_HPP
 
 typedef const int board;
 
 
     class Screen {
-    public:
-        enum Action {
-            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_U, MOVE_D, MOVE_L, MOVE_R, ENTER
-        };//Action of the player
-        static board S_WIDTH;
-        static board S_HEIGHT;
-    private:
-        SDL_Window *m_window;
-        SDL_Renderer *m_renderer;
-        SDL_Texture *m_texture;
-        Uint32 *m_mainBuffer;
-    public:
+        public:
         //Create a Scene
-        Screen();
 
 
         //Init window, renderer, texture, and buffer
-        bool init();
+        
+        static Screen* GetInstance(){
+            if(s_screen == nullptr){
+                s_screen = new Screen();
+            }
+            return s_screen;
+        }
 
+        Screen(Screen &other) = delete;
+        ~Screen();
+        void operator=(const Screen &) = delete;
+        
         int processEvents();
 
         void update();
@@ -41,8 +35,6 @@ typedef const int board;
 
         void fullscreen(bool fullscreen);
 
-        void close();
-
         void drawStart();
 
         void drawGameOver();
@@ -50,7 +42,24 @@ typedef const int board;
         void drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y);
 
         void drawText(int x,int y,int size,std::string str,SDL_Color color);
+    protected:
+        Screen();
+        static Screen* s_screen;
+
+    public:
+        enum Action {
+            QUIT, ESCAPE, PAUSE, FULLSCREEN, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_U, MOVE_D, MOVE_L, MOVE_R, ENTER
+        };//Action of the player
+        static board S_WIDTH;
+        static board S_HEIGHT;
+    private:
+
+        std::unique_ptr<SDL_Window,SDLWindowDeleter> m_window;
+        std::unique_ptr<SDL_Renderer,SDLRendererDeleter> m_renderer;
+        std::unique_ptr<SDL_Texture,SDLTextureDeleter> m_texture;
+
+        std::unique_ptr<Uint32[]> m_mainBuffer;
     };
 
 
-#endif //SCREEN_HPP
+

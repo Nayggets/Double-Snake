@@ -1,7 +1,5 @@
 #include "Screen.hpp"
-#include <SDL2/SDL.h>
-#include <iostream>
-#include <cstring>
+
 
 #ifdef __gnu_linux__
 #endif
@@ -12,62 +10,64 @@ typedef const int board;
     board Screen::S_WIDTH = 1280;
     board Screen::S_HEIGHT = 720;
 
-    Screen::Screen(): m_window(NULL),m_renderer(NULL),m_texture(NULL),m_mainBuffer(NULL){}
-
-
-    bool Screen::init()
-    {
+    Screen::Screen(){
         //Initialize screen
         if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-            std::cout << "Failed at SDL_Init()" << std::endl;
-            return false;
+            throw std::runtime_error("Failed to Load SDL_Init()");
         }
         if(TTF_Init() < 0){
-            std::cerr << "Failed init TTF" << std::endl;
-            return false; 
+            throw std::runtime_error("Failed to Init SDL_TTF");
         }
         //Create window
-        m_window = SDL_CreateWindow("DoubleSnake",
+        m_window = std::unique_ptr<SDL_Window,SDLWindowDeleter>(SDL_CreateWindow("DoubleSnake",
                                     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, S_WIDTH, S_HEIGHT,
-                                    SDL_WINDOW_SHOWN);
+                                    SDL_WINDOW_SHOWN),S_SDL_DeleteWindow);
 
         if (!m_window) {
             SDL_Log("Failed at SDL_CreateWindow()");
             SDL_Log("%s", SDL_GetError());
             SDL_Quit();
-            return false;
+            throw std::runtime_error("Failed to Create Window");
         }
 
         //Create renderer
-        m_renderer = SDL_CreateRenderer(m_window, -1,
-                                        SDL_RENDERER_PRESENTVSYNC);
+        m_renderer = std::unique_ptr<SDL_Renderer,SDLRendererDeleter>(SDL_CreateRenderer(m_window.get(), -1,
+                                        SDL_RENDERER_PRESENTVSYNC),S_SDL_DeleteRenderer);
 
         if (!m_renderer) {
             SDL_Log("Failed at SDL_CreateRenderer()");
             SDL_Log("%s", SDL_GetError());
-            SDL_DestroyWindow(m_window);
+            SDL_DestroyWindow(m_window.get());
             SDL_Quit();
-            return false;
+            throw std::runtime_error("Failed to Create Renderer");
         }
 
         //Create Texture
-        m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888,
-                                      SDL_TEXTUREACCESS_STATIC, S_WIDTH, S_HEIGHT);
+        m_texture = std::unique_ptr<SDL_Texture,SDLTextureDeleter>(SDL_CreateTexture(m_renderer.get(), SDL_PIXELFORMAT_RGBA8888,
+                                      SDL_TEXTUREACCESS_STATIC, S_WIDTH, S_HEIGHT),S_SDL_DeleteTexture);
 
         if (!m_texture) {
             SDL_Log("Failed at SDL_CreateTexture()");
             SDL_Log("%s", SDL_GetError());
-            SDL_DestroyRenderer(m_renderer);
-            SDL_DestroyWindow(m_window);
+            SDL_DestroyRenderer(m_renderer.get());
+            SDL_DestroyWindow(m_window.get());
             SDL_Quit();
-            return false;
+            throw std::runtime_error("Failed to Create Texture");
         }
 
         //Init buffer
-        m_mainBuffer = new Uint32[S_WIDTH * S_HEIGHT];
+        m_mainBuffer = std::make_unique<Uint32[]>(S_WIDTH * S_HEIGHT);
         clear();
-        return true;
     }
+    Screen::~Screen()
+    {
+        SDL_DestroyTexture(m_texture.get());
+        SDL_DestroyRenderer(m_renderer.get());
+        SDL_DestroyWindow(m_window.get());
+        SDL_Quit();
+        TTF_Quit();
+    }
+
 
     int Screen::processEvents()
     {
@@ -128,15 +128,15 @@ typedef const int board;
 
     void Screen::update()
     {
-        SDL_RenderPresent(m_renderer);
-        SDL_UpdateTexture(m_texture, NULL, m_mainBuffer, S_WIDTH * sizeof(Uint32));
-        SDL_RenderClear(m_renderer);
-        SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+        SDL_RenderPresent(m_renderer.get());
+        SDL_UpdateTexture(m_texture.get(), NULL, m_mainBuffer.get(), S_WIDTH * sizeof(Uint32));
+        SDL_RenderClear(m_renderer.get());
+        SDL_RenderCopy(m_renderer.get(), m_texture.get(), NULL, NULL);
     }
 
     void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
     {
-        SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
+        SDL_SetRenderDrawColor(m_renderer.get(), red, green, blue, 255);
         SDL_Rect rect;
 
         rect.x = x;
@@ -144,38 +144,29 @@ typedef const int board;
         rect.w = 16;
         rect.h = 16;
 
-        SDL_RenderFillRect(m_renderer, &rect);
+        SDL_RenderFillRect(m_renderer.get(), &rect);
     }
     
     void Screen::drawPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue)
     {
-        SDL_SetRenderDrawColor(m_renderer, red, green, blue, 255);
+        SDL_SetRenderDrawColor(m_renderer.get(), red, green, blue, 255);
         
 
-        SDL_RenderDrawPoint(m_renderer,x,y);
+        SDL_RenderDrawPoint(m_renderer.get(),x,y);
     }
 
     void Screen::clear()
     {
-        memset(m_mainBuffer, 0, S_WIDTH * S_HEIGHT * sizeof(Uint32));
+        memset(m_mainBuffer.get(), 0, S_WIDTH * S_HEIGHT * sizeof(Uint32));
     }
 
     void Screen::fullscreen(bool m_fullscreen)
     {
-        if(m_fullscreen) SDL_SetWindowFullscreen(m_window,SDL_WINDOW_FULLSCREEN);
-        if(!m_fullscreen) SDL_SetWindowFullscreen(m_window,0);
+        if(m_fullscreen) SDL_SetWindowFullscreen(m_window.get(),SDL_WINDOW_FULLSCREEN);
+        if(!m_fullscreen) SDL_SetWindowFullscreen(m_window.get(),0);
     }
 
-    void Screen::close()
-    {
-        delete [] m_mainBuffer;
 
-        SDL_DestroyTexture(m_texture);
-        SDL_DestroyRenderer(m_renderer);
-        SDL_DestroyWindow(m_window);
-        SDL_Quit();
-        TTF_Quit();
-    }
 
     void Screen::drawStart() 
     {
@@ -217,7 +208,7 @@ typedef const int board;
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sans,str.c_str(),color);
 
 
-        SDL_Texture* Message = SDL_CreateTextureFromSurface(m_renderer, surfaceMessage);
+        SDL_Texture* Message = SDL_CreateTextureFromSurface(m_renderer.get(), surfaceMessage);
 
         SDL_Rect Message_rect; //create a rect
         Message_rect.x = x;  //controls the rect's x coordinate 
@@ -236,8 +227,8 @@ typedef const int board;
         // the crop size (you can ignore this if you don't want
         // to dabble with cropping), and the rect which is the size
         // and coordinate of your texture
-        SDL_RenderCopy(m_renderer, Message, NULL, NULL);
-        SDL_RenderPresent(m_renderer);
+        SDL_RenderCopy(m_renderer.get(), Message, NULL, NULL);
+        SDL_RenderPresent(m_renderer.get());
         // Don't forget to free your surface and texture
         TTF_CloseFont(sans);
         SDL_FreeSurface(surfaceMessage);
