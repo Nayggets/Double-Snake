@@ -4,11 +4,11 @@ SnakeGame::SnakeGame()
     : m_snakeOne{128,128,2},
       m_snakeTwo{256,256,1},
       m_theMagicalFruit{512,512},
-      m_toCheckCollide{},
-      m_screen{}
+      m_toCheckCollide{}    
 {
-    m_screen.init();
     m_run = true;
+    m_screen = Screen::GetInstance();
+
 }
 
 SnakeGame::~SnakeGame()
@@ -23,7 +23,7 @@ void SnakeGame::startWait()
 
     std::cout << "Appuyez sur une touche pour commencer" << std::endl;
     while(m_starting && !m_quit){
-        int action = m_screen.processEvents();
+        int action = m_screen->processEvents();
         switch (action) {
             case Screen::Action::QUIT:
                 m_quit = true;
@@ -64,7 +64,7 @@ void SnakeGame::pauseWait()
 {
     bool m_quit = false;
     while(m_pause && !m_quit){
-        int action = m_screen.processEvents();
+        int action = m_screen->processEvents();
         switch (action) {
             case Screen::Action::QUIT:
                 m_quit = true;
@@ -81,7 +81,7 @@ void SnakeGame::pauseWait()
 
 void SnakeGame::checkProcessEvent()
 {
-    switch (m_screen.processEvents()) {
+    switch (m_screen->processEvents()) {
         case Screen::Action::ENTER:
             m_endMenu = false;
             break;
@@ -137,11 +137,11 @@ void SnakeGame::checkProcessEvent()
 
 void SnakeGame::globalDraw()
 {
-    m_screen.clear();
-    m_snakeOne.draw(m_screen);
-    m_snakeTwo.draw(m_screen);
-    m_theMagicalFruit.draw(m_screen);
-    m_screen.update();
+    m_screen->clear();
+    m_snakeOne.draw(*m_screen);
+    m_snakeTwo.draw(*m_screen);
+    m_theMagicalFruit.draw(*m_screen);
+    m_screen->update();
 }
 
 void SnakeGame::globalUpdate()
@@ -229,7 +229,7 @@ void SnakeGame::run()
                 std::cout << "fin pause" << std::endl;
             }
 
-            m_screen.fullscreen(m_fullscreen);
+            m_screen->fullscreen(m_fullscreen);
 
             
             //TODO déplacement du snake
@@ -250,25 +250,25 @@ void SnakeGame::gameOver()
     m_endMenu = true;
     while(m_endMenu && !m_quit)
     {
-        m_screen.clear();
-        m_screen.drawText(512,512,12,"Game Over",White);
-        m_screen.update();
+        m_screen->clear();
+        m_screen->drawText(512,512,12,"Game Over",White);
+        m_screen->update();
         checkProcessEvent();
 
     }
-    m_screen.close();
+    free(m_screen);
 
 }
 
 void SnakeGame::launch()
 {
     std::vector<Body> temp;
-    m_screen.drawStart();
+    m_screen->drawStart();
 
 
-    m_screen.clear();
-    m_snakeOne.draw(m_screen);
-    m_snakeTwo.draw(m_screen);
-    m_screen.update();
+    m_screen->clear();
+    m_snakeOne.draw(*m_screen);
+    m_snakeTwo.draw(*m_screen);
+    m_screen->update();
     this->run();
 }

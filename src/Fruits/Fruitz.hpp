@@ -1,6 +1,7 @@
+#pragma once
+
 #include "../Body2D/Body.hpp"
 #include "../Screen_Manager/Screen.hpp"
-#pragma once
 
 
 class Fruitz : public Body{

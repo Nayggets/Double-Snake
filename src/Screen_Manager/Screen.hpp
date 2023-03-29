@@ -4,19 +4,20 @@
 
 typedef const int board;
 
-
     class Screen {
+        protected:
+            Screen();
+            static Screen* s_screen;
         public:
         //Create a Scene
-
 
         //Init window, renderer, texture, and buffer
         
         static Screen* GetInstance(){
-            if(s_screen == nullptr){
-                s_screen = new Screen();
+            if(Screen::s_screen == nullptr){
+                Screen::s_screen = new Screen();
             }
-            return s_screen;
+            return Screen::s_screen;
         }
 
         Screen(Screen &other) = delete;
@@ -42,9 +43,8 @@ typedef const int board;
         void drawBitMap(std::vector<std::vector<int>> bitMap, int x, int y);
 
         void drawText(int x,int y,int size,std::string str,SDL_Color color);
-    protected:
-        Screen();
-        static Screen* s_screen;
+
+
 
     public:
         enum Action {

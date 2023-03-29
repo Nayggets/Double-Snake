@@ -6,9 +6,9 @@
 
 typedef const int board;
 
-
     board Screen::S_WIDTH = 1280;
     board Screen::S_HEIGHT = 720;
+    Screen* Screen::s_screen = nullptr;;
 
     Screen::Screen(){
         //Initialize screen
@@ -59,6 +59,7 @@ typedef const int board;
         m_mainBuffer = std::make_unique<Uint32[]>(S_WIDTH * S_HEIGHT);
         clear();
     }
+
     Screen::~Screen()
     {
         SDL_DestroyTexture(m_texture.get());

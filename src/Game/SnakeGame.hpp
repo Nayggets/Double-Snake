@@ -1,7 +1,9 @@
+#pragma once
+
+#include "../Screen_Manager/Screen.hpp"
 #include "../Fruits/Fruitz.hpp"
 #include "../Snake/Snake.hpp"
 #include "../Body2D/Body.hpp"
-#include "../Screen_Manager/Screen.hpp"
 class SnakeGame{
     public:
         SnakeGame();
@@ -17,7 +19,7 @@ class SnakeGame{
         /*collision*/
         std::vector<Body> m_toCheckCollide;
         /*Screen*/
-        Screen m_screen;
+        Screen* m_screen;
         
         /*Menu*/
         bool m_pause = false;
