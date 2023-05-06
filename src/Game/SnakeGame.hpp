@@ -28,7 +28,7 @@ class SnakeGame{
         bool m_starting = true;
         bool m_snakeOneDead = false;
         bool m_snakeTwoDead = false;
-        bool m_endMenu = false;
+
         
         /*Data for game running*/
         int m_moove = 0;

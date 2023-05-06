@@ -82,9 +82,6 @@ void SnakeGame::pauseWait()
 void SnakeGame::checkProcessEvent()
 {
     switch (m_screen->processEvents()) {
-        case Screen::Action::ENTER:
-            m_endMenu = false;
-            break;
         case Screen::Action::QUIT:
             m_quit = true;
             break;
@@ -247,8 +244,8 @@ void SnakeGame::gameOver()
     
 
     checkProcessEvent();
-    m_endMenu = true;
-    while(m_endMenu && !m_quit)
+
+    while(!m_quit)
     {
         m_screen->clear();
         m_screen->drawText(512,512,12,"Game Over",White);
@@ -256,7 +253,7 @@ void SnakeGame::gameOver()
         checkProcessEvent();
 
     }
-    free(m_screen);
+
 
 }
 
